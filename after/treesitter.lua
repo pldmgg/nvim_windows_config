@@ -11,7 +11,7 @@ require'nvim-treesitter.configs'.setup {
   
     -- List of parsers to ignore installing (for "all")
     -- "help" is now called "vimdoc"
-    ignore_install = { "help", "c#" },
+    ignore_install = { "help", "c#", "zig" },
   
     highlight = {
       enable = true,

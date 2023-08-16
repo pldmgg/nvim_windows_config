@@ -76,3 +76,9 @@ conda init
         (Get-Command python).Source // Should return C:\tools\Anaconda3\python.exe
     - Use pip to install neovim
         python -m pip install neovim
+
+
+- After all of this, there is still a problem with the powershell Parser. If you do :LspInfo while in a .ps1 file, it will say that "0 client(s)" are connected to the buffer,
+which basically means you don't get powershell intellisense within Neovim
+    - Looking at :checkhealth, the error message under vim.treesitter: require("vim.treesitter.health").check()
+    Error Parser "powershell" failed to load (path: C:\Users\{user}\AppData\Local\nvim-data\site\pack\packer\start\nvim-treesitter\parser\powershell.so): ...win64\share\nvim\rutime/lua/vim/treesitter/language.lua:99: ABI version mismatch for powershell.so: supported between 13 and 14, found 6

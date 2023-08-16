@@ -58,3 +58,21 @@ $newMachinePath = (($machinePath + ';' + 'C:\tools\Anaconda3;C:\tools\Anaconda3\
 conda init
 
 - You will need to exit and re-enter your shell after conda init
+
+- Now we need to clean up some python references
+    - Delete the following from C:\ProgramData\chocolatey\bin (which probably came from the mingw install)
+        python.exe
+        python3.9.exe
+        python3.exe
+        python3w.exe
+        pythonw.exe
+    - Then create some symlinks:
+        mklink C:\ProgramData\chocolatey\bin\python.exe C:\tools\Anaconda3\python.exe
+        mklink C:\ProgramData\chocolatey\bin\python3.exe C:\tools\Anaconda3\python.exe
+        mklink C:\ProgramData\chocolatey\bin\pythonw.exe C:\tools\Anaconda3\pythonw.exe
+        mklink C:\ProgramData\chocolatey\bin\pip.exe C:\tools\Anaconda3\Scripts\pip.exe
+    - Set PYTHONPATH and PYTHONHOME to C:\tools\Anaconda3 in Windows Machine (system) Environment Variables (just do it via Control Panel)
+    - Make sure Get-Command python refers to Anacondas python.exe
+        (Get-Command python).Source // Should return C:\tools\Anaconda3\python.exe
+    - Use pip to install neovim
+        python -m pip install neovim

@@ -2,3 +2,59 @@
 neovim config for windows
 
 I use Neovim on Windows...because...reasons...
+
+# Getting neovim working on Windows
+- Install requirements: git, nodejs, mingw, neovim
+choco install git
+choco install mingw
+choco install nodejs
+
+- Create necessary directories
+$DirsToCheck = @("$env:LOCALAPPDATA\nvim", "$env:LOCALAPPDATA\nvim-data", "$HOME\.vim")
+foreach ($dir in $DirsToCheck) {if (!(Test-Path -Path $dir)) {$null = New-Item -Path $dir -ItemType Directory -Force}}
+
+- Install Packer (Reference: 'https://github.com/wbthomason/packer.nvim#requirements')
+git clone https://github.com/wbthomason/packer.nvim "$env:LOCALAPPDATA\nvim-data\site\pack\packer\start\packer.nvim"
+
+- Deploy neovim baseline config (thanks ThePrimeagen)
+git clone https://github.com/pldmgg/nvim_windows_config "$env:LOCALAPPDATA\nvim"
+
+- Install neovim
+choco install neovim
+
+- The following powershell commands should succeed. If any of them dont, check your $env:Path
+(Get-Command git).Source // Should return C:\Program Files\Git\cmd\git.exe
+(Get-Command gcc).Source // Should return C:\ProgramData\chocolatey\bin\gcc.exe
+(Get-Command npm).Source // Should return C:\Program Files\nodejs\npm.cmd
+(Get-Command nvim).Source // Should return C:\tools\neovim\nvim-win64\bin\nvim.exe
+
+- Run nvim for the first time
+cd $env:LOCALAPPDATA
+nvim .
+
+- Skip past all of the initial errors, then in neovim, run:
+:PackerCompile
+:PackerClean
+:PackerInstall
+:PackerUpdate
+:PackerSync
+
+- Exit and reenter neovim
+:q
+nvim .
+
+- Next run :Mason to check on the three LSPs in our baseline config: pyright, lua_ls, and powershell_es
+:Mason
+
+- If you want to work with python, install anaconda3:
+choco install anaconda3
+
+- Make sure C:\tools\Anaconda3 and C:\tools\Anaconda3\Scripts are part of your machine path
+$machinePath = ([System.Environment]::GetEnvironmentVariable('PATH', [System.EnvironmentVariableTarget]::Machine).TrimEnd(';') -split ';' | Sort-Object | Get-Unique) -join ';'
+$newMachinePath = (($machinePath + ';' + 'C:\tools\Anaconda3;C:\tools\Anaconda3\Scripts').TrimEnd(';') -split ';' | Sort-Object | Get-Unique) -join ';'
+[System.Environment]::SetEnvironmentVariable('PATH', $newMachinePath,[System.EnvironmentVariableTarget]::Machine)
+
+- Make sure you see the (base) python evironment indicator in your terminal after install
+conda init
+
+- You will need to exit and re-enter your shell after conda init
